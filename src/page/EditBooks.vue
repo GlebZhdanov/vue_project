@@ -1,13 +1,24 @@
 <template>
   <div class="text">
-    Edit books
+    <FormAddBooks @create="postBook" />
   </div>
 </template>
 
 <script>
-  export default {
-
-  }
+import FormAddBooks from "@/components/FormAddBooks";
+import {api} from "@/api/api";
+export default {
+	components: {FormAddBooks},
+	methods: {
+		async postBook(form) {
+			try {
+				await api.post("/books", form)
+			} catch (e) {
+				console.log(e)
+			}
+		}
+	}
+}
 </script>
 
 <style>

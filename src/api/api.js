@@ -1,5 +1,5 @@
-import axios from "axios";
+import axios from "axios"
 
 export const api = axios.create({
-  baseURL: "https://crudcrud.com/api/3d04fa5b88b74d93b5c31f98ca1f1b7a",
+	baseURL: "https://crudcrud.com/api/d64c13dc694347babde7d836b8635a17",
 })

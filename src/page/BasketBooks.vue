@@ -3,9 +3,9 @@
     <v-container>
       <v-row>
         <Book
-            v-for="book in $store.getters.getAllBasketBooks"
-            :book="book"
-            :is-delete-button="true"
+          v-for="book in allBookBasket"
+          :book="book"
+          :is-delete-button="true"
         />
       </v-row>
     </v-container>
@@ -16,8 +16,13 @@
 import Book from "@/components/Book";
 
 export default {
-    components: {Book},
-  }
+	components: {Book},
+	computed: {
+		allBookBasket() {
+			return this.$store.getters.getAllBasketBooks
+		}
+	}
+}
 </script>
 
 <style>
