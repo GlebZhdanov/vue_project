@@ -34,7 +34,7 @@
         class="link"
         to="/basket"
       >
-        Корзина
+        Корзина ({{ allBookBasket.length }})
       </router-link>
     </v-btn>
     <v-btn value="nearby">
@@ -51,7 +51,12 @@
 <script>
 
 export default {
-	name: "Navbar"
+	name: "Navbar",
+	computed: {
+		allBookBasket() {
+			return this.$store.getters.getAllBasketBooks
+		}
+	}
 }
 </script>
 

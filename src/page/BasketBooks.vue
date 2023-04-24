@@ -5,7 +5,7 @@
         <Book
           v-for="book in allBookBasket"
           :book="book"
-          :is-delete-button="true"
+          :is-button-basket-page="true"
         />
       </v-row>
     </v-container>

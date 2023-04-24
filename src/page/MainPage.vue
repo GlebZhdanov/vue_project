@@ -5,6 +5,7 @@
         <Book
           v-for="book in books"
           :book="book"
+          :is-button-main-page="true"
         />
       </v-row>
     </v-container>
