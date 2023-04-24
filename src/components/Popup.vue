@@ -3,37 +3,30 @@
     <v-dialog
       v-model="popupVisible"
       max-width="450px"
+      style="position: relative"
     >
-      <!--      <template #activator="{ on, attrs }">-->
-      <!--        <v-btn-->
-      <!--          color="primary"-->
-      <!--          dark-->
-      <!--          v-bind="attrs"-->
-      <!--          v-on="on"-->
-      <!--        >-->
-      <!--          Open Dialog-->
-      <!--        </v-btn>-->
-      <!--      </template>-->
-      <v-card>
-        <slot />
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="closePopup"
-          >
-            Закрыть
-          </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="closePopup"
-          >
-            Создать книгу
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+      <div class="content">
+        <v-img
+          :src="require('@/accets/img/closeButton.svg')"
+          top="100px"
+          width="20px"
+          class="close_image"
+          @click="closePopup"
+        />
+        <!--      <template #activator="{ on, attrs }">-->
+        <!--        <v-btn-->
+        <!--          color="primary"-->
+        <!--          dark-->
+        <!--          v-bind="attrs"-->
+        <!--          v-on="on"-->
+        <!--        >-->
+        <!--          Open Dialog-->
+        <!--        </v-btn>-->
+        <!--      </template>-->
+        <v-card>
+          <slot />
+        </v-card>
+      </div>
     </v-dialog>
   </v-row>
 </template>
@@ -71,5 +64,19 @@ export default {
 </script>
 
 <style>
+.content {
+  position: relative;
+}
 
+.close_image {
+  cursor: pointer;
+  position: absolute;
+  z-index: 1;
+  right: 20px;
+  top: 20px;
+}
+
+.close_image:hover {
+  opacity: 0.6;
+}
 </style>

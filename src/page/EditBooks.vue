@@ -9,12 +9,26 @@
         :book="book"
         :is-button-edit-page="true"
         @delete="deleteBook"
+        @editBook="editBooks"
       />
     </v-row>
     <Popup
       ref="modalName"
     >
-      <FormAddBooks />
+      <v-alert
+        v-if="isSuccessPostBook"
+        class="alert"
+        type="success"
+      >
+        Книга успешно создана
+      </v-alert>
+      <v-alert
+        v-if="isErrorPostBook"
+        type="error"
+      >
+        Произошла ошибка
+      </v-alert>
+      <FormAddBooks @createBook="postBook" />
     </Popup>
   </v-container>
   <!--    <FormAddBooks @create="postBook" />-->
@@ -31,6 +45,8 @@ export default {
 	components: {FormAddBooks,Book, Popup},
 	data: () => ({
 		books: [],
+		isSuccessPostBook: false,
+		isErrorPostBook: false,
 	}),
 	mounted() {
 		this.getBooks();
@@ -38,9 +54,10 @@ export default {
 	methods: {
 		async postBook(form) {
 			try {
-				await api.post("/books", form)
+				await api.post("/books", form);
+				this.isSuccessPostBook = true;
 			} catch (e) {
-				console.log(e)
+				this.isErrorPostBook = true;
 			}
 		},
 		async deleteBook(id) {
@@ -58,6 +75,8 @@ export default {
 				console.log(e)
 			}
 		},
+		editBooks(book) {
+		}
 	}
 }
 </script>

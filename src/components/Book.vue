@@ -1,10 +1,10 @@
 <template>
   <v-card
     class="mx-auto my-12"
-    max-width="300"
+    max-width="270"
   >
     <v-img
-      height="350px"
+      height="300px"
       :src="require('@/accets/img/cover' + book.cover.image)"
     />
     <v-card-title class="pa-4">
@@ -49,7 +49,7 @@
       block
       color="black"
       text
-      @click="addBook"
+      @click="editBook"
     >
       Редактировать
     </v-btn>
@@ -122,6 +122,9 @@ export default {
 		},
 		deleteBook() {
 			this.$emit("delete", this.book._id)
+		},
+		editBook() {
+			console.log(this.book)
 		},
 	},
 	computed: {
