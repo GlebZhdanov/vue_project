@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app class="app">
     <Navbar />
     <router-view />
   </v-app>
@@ -19,3 +19,12 @@ export default {
 	}),
 };
 </script>
+
+<style>
+.app {
+  max-width: 1280px;
+  min-height: 100vh;
+  margin: 0 auto;
+}
+
+</style>

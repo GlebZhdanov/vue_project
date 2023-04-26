@@ -23,6 +23,9 @@
         <div class="grey--text mb-3">
           Жанр: {{ book.genre }}
         </div>
+        <div class="grey--text mb-3">
+          Цена: {{ book.price }}
+        </div>
       </v-col>
     </v-card-text>
     <v-divider class="mx-4" />
@@ -46,6 +49,7 @@
     </v-btn>
     <v-btn
       v-if="isButtonEditPage"
+      ref="parent-ref.modalNameEdit.openPopup()"
       block
       color="black"
       text
@@ -58,32 +62,12 @@
       block
       color="black"
       text
+      :disabled="disabled"
       @click="addBook"
     >
       Добавить в корзину
     </v-btn>
   </v-card>
-<!--  <v-col cols="4">-->
-<!--    <div class="book">-->
-<!--      <v-img-->
-<!--        :src="require('@/accets/img/cover' + book.cover.image)"-->
-<!--        max-height="200"-->
-<!--        max-width="200"-->
-<!--      />-->
-<!--    </div>-->
-<!--    <v-btn-->
-<!--      v-if="isDeleteButton"-->
-<!--      @click="deleteBook"-->
-<!--    >-->
-<!--      Удалить из корзины-->
-<!--    </v-btn>-->
-<!--    <v-btn-->
-<!--      v-else-->
-<!--      @click="addBook"-->
-<!--    >-->
-<!--      Добавить в корзину-->
-<!--    </v-btn>-->
-<!--  </v-col>-->
 </template>
 
 <script>
@@ -108,12 +92,14 @@ export default {
 			require: true,
 		},
 	},
+	data: () => ({
+		disabled: false,
+	}),
 	methods: {
 		...mapMutations([
 			"addBasketBook",
 			"deleteBasketBook",
 		]),
-		...mapGetters(["getAllBasketBooks"]),
 		addBook() {
 			this.addBasketBook(this.book)
 		},
@@ -124,14 +110,19 @@ export default {
 			this.$emit("delete", this.book._id)
 		},
 		editBook() {
-			console.log(this.book)
+			this.$emit("editBook", this.book)
 		},
+
 	},
-	computed: {
-		allBookBasket() {
-			return this.$store.getters.getAllBasketBooks
-		},
-	}
+	// eslint-disable-next-line vue/order-in-components
+	watch: {
+		"$store.state.booksModule.basketBook": function() {
+			 this.disabled = this.$store.getters.getAllBasketBooks.some(item => item === this.book);
+		}
+		// handledDisabledButton() {
+		// 	return this.$store.getters.getAllBasketBooks.some(item => item === this.book);
+		// }
+	},
 }
 </script>
 

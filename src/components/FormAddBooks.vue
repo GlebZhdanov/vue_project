@@ -20,14 +20,18 @@
       label="Год"
       required
     />
-
     <v-text-field
       v-model="form.author"
       :rules="authorRules"
       label="Автор"
       required
     />
-
+    <v-text-field
+      v-model="form.price"
+      :rules="authorRules"
+      label="Цена"
+      required
+    />
     <v-select
       v-model="form.genre"
       :items="items"
@@ -84,6 +88,7 @@ export default {
 			year: "",
 			author: "",
 			cover: "",
+			price: "",
 			genre: "",
 		},
 		valid: true,

@@ -5,29 +5,30 @@
     class="pa-5"
   >
     <v-card-title class="justify-center">
-      <span class="text-h5">Создать книгу</span>
+      <span class="text-h5">Редактировать книгу</span>
     </v-card-title>
 
     <v-text-field
       v-model="form.title"
-      :rules="yearRules"
       label="Название"
       required
     />
     <v-text-field
       v-model="form.year"
-      :rules="yearRules"
       label="Год"
       required
     />
-
     <v-text-field
       v-model="form.author"
-      :rules="authorRules"
       label="Автор"
       required
     />
-
+    <v-text-field
+      v-model="form.price"
+      label="Цена"
+      type="number"
+      required
+    />
     <v-select
       v-model="form.genre"
       :items="items"
@@ -39,6 +40,7 @@
       v-model="form.cover"
       :items="itemsCover"
       label="Выберете обложку"
+      value="form.cover"
     >
       <template #selection="{ item, index }">
         <img
@@ -46,7 +48,7 @@
           width="40px"
           height="40px"
           :src="require('@/accets/img/cover' + item.image)"
-        >{{ item.nameCover }}
+        >{{ form.nameCover }}
       </template>
       <template #item="{ item }">
         <img
@@ -54,23 +56,16 @@
           width="70px"
           height="70px"
           :src="require('@/accets/img/cover' + item.image)"
-        >{{ item.nameCover }}
+        >{{ form.nameCover }}
       </template>
     </v-select>
     <v-card-actions class="mt-4 justify-center">
       <v-btn
         color="#C5CAE9"
-        class="mr-4"
-        @click="reset"
-      >
-        Очистить форму
-      </v-btn>
-      <v-btn
-        color="#C5CAE9"
         :disabled="!form.cover || !valid"
-        @click="createBook"
+        @click="editBook"
       >
-        Создать книгу
+        Редактировать
       </v-btn>
     </v-card-actions>
   </v-form>
@@ -78,21 +73,23 @@
 
 <script>
 export default {
+	props: {
+		// booksEdit: {
+		// 	type: Object,
+		// 	default: {},
+		// },
+		value: {
+			type: Object,
+			required: true
+		},
+	},
 	data: () => ({
+
 		form: {
-			title: "",
-			year: "",
-			author: "",
-			cover: "",
-			genre: "",
+			type: Object,
+			default: {},
 		},
 		valid: true,
-		yearRules: [
-			v => !!v || "Введите год",
-		],
-		authorRules: [
-			v => !!v || "Введите автора",
-		],
 		select: null,
 		items: [
 			"История",
@@ -115,19 +112,23 @@ export default {
 			{ nameCover: "Обложка 10", image: "10.jpeg"},
 		],
 	}),
+	watch: {
+		value(newValue) {
+			this.form = newValue
+		}
+	},
+	created() {
+		this.form = this.value
+	},
 	methods: {
-		// validate () {
-		// 	this.$refs.form.validate()
-		// },
 		reset () {
 			this.$refs.form.reset()
 		},
 		resetValidation () {
 			this.$refs.form.resetValidation()
 		},
-		createBook () {
-			this.$emit("createBook", this.form)
-			// this.reset()
+		editBook () {
+			this.$emit("editBook", this.form)
 		}
 	},
 }

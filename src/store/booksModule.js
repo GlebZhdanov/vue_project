@@ -4,7 +4,6 @@ export default {
 	},
 	mutations: {
 		deleteBasketBook(state, payload) {
-			console.log(payload)
 			state.basketBook = [...state.basketBook].filter(book => book._id !== payload._id)
 		},
 		addBasketBook(state, payload) {
