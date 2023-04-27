@@ -121,9 +121,6 @@ export default {
 		],
 	}),
 	methods: {
-		// validate () {
-		// 	this.$refs.form.validate()
-		// },
 		reset () {
 			this.$refs.form.reset()
 		},
@@ -131,8 +128,7 @@ export default {
 			this.$refs.form.resetValidation()
 		},
 		createBook () {
-			this.$emit("createBook", this.form)
-			// this.reset()
+			this.$emit("createBook", this.form);
 		}
 	},
 }

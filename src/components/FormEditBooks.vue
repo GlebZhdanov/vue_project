@@ -40,7 +40,6 @@
       v-model="form.cover"
       :items="itemsCover"
       label="Выберете обложку"
-      value="form.cover"
     >
       <template #selection="{ item, index }">
         <img
@@ -48,7 +47,7 @@
           width="40px"
           height="40px"
           :src="require('@/accets/img/cover' + item.image)"
-        >{{ form.nameCover }}
+        >{{ item.nameCover }}
       </template>
       <template #item="{ item }">
         <img
@@ -56,7 +55,7 @@
           width="70px"
           height="70px"
           :src="require('@/accets/img/cover' + item.image)"
-        >{{ form.nameCover }}
+        >{{ item.nameCover }}
       </template>
     </v-select>
     <v-card-actions class="mt-4 justify-center">
@@ -74,17 +73,12 @@
 <script>
 export default {
 	props: {
-		// booksEdit: {
-		// 	type: Object,
-		// 	default: {},
-		// },
 		value: {
 			type: Object,
 			required: true
 		},
 	},
 	data: () => ({
-
 		form: {
 			type: Object,
 			default: {},
