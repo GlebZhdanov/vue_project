@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "deploy" : "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "@mdi/font": "^7.2.96",
@@ -22,6 +23,7 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^8.39.0",
     "eslint-plugin-vue": "^9.11.0",
+    "gh-pages": "^5.0.0",
     "vue-cli-plugin-vuetify": "~2.5.8",
     "vue-template-compiler": "^2.6.14"
   },
