@@ -29,20 +29,6 @@
     <Popup
       ref="modalNameAdd"
     >
-      <v-alert
-        v-if="isSuccessPostBook"
-        class="alert"
-        type="success"
-      >
-        Запрос прошел успешно
-      </v-alert>
-      <v-alert
-        v-if="isErrorPostBook"
-        type="error"
-        class="alert"
-      >
-        Произошла ошибка
-      </v-alert>
       <FormAddBooks
         @createBook="postBook"
       />
@@ -55,20 +41,24 @@
         @editBook="editPostBooks"
       />
     </Popup>
-    <v-alert
-      v-if="isSuccessPostBook"
-      class="alert"
-      type="success"
-    >
-      Запрос прошел успешно
-    </v-alert>
-    <v-alert
-      v-if="isErrorPostBook"
-      type="error"
-      class="alert"
-    >
-      Произошла ошибка
-    </v-alert>
+    <div id="example-2">
+      <transition name="bounce">
+        <v-alert
+          v-if="isSuccessPostBook"
+          class="alert"
+          type="success"
+        >
+          Запрос прошел успешно
+        </v-alert>
+        <v-alert
+          v-if="isErrorPostBook"
+          type="error"
+          class="alert"
+        >
+          Произошла ошибка
+        </v-alert>
+      </transition>
+    </div>
   </v-container>
 </template>
 
@@ -81,9 +71,10 @@ import FormEditBooks from "@/components/FormEditBooks";
 export default {
 	components: {FormEditBooks,FormAddBooks,Book, Popup},
 	data: () => ({
+		show: true,
 		books: [],
 		booksEdit: {},
-		isSuccessPostBook: true,
+		isSuccessPostBook: false,
 		isErrorPostBook: false,
 		booksTest: [
 			{title: "Тьма после рассвета",author: "Александра Маринина",year: 1994,genre: "История",price: 3, cover: {image: "1.jpeg", nameCover: "Обложка 1"}},
@@ -169,10 +160,27 @@ export default {
 </script>
 
 <style>
+.bounce-enter-active {
+  animation: bounce-in .5s;
+}
+.bounce-leave-active {
+  animation: bounce-in .5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 .alert {
   position: fixed;
-  top: 15%;
-  left: 50%;
+  top: 50%;
+  left: 37%;
   width: 450px;
   margin: 0;
 }
