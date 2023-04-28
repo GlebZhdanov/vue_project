@@ -32,6 +32,11 @@
       <FormAddBooks
         @createBook="postBook"
       />
+      <AlertRequest
+        :is-error-request="isErrorRequest"
+        :is-success-request="isSuccessRequest"
+        :is-popup="true"
+      />
     </Popup>
     <Popup
       ref="modalNameEdit"
@@ -40,25 +45,16 @@
         v-model="booksEdit"
         @editBook="editPostBooks"
       />
+      <AlertRequest
+        :is-error-request="isErrorRequest"
+        :is-success-request="isSuccessRequest"
+        :is-popup="true"
+      />
     </Popup>
-    <div id="example-2">
-      <transition name="bounce">
-        <v-alert
-          v-if="isSuccessPostBook"
-          class="alert"
-          type="success"
-        >
-          Запрос прошел успешно
-        </v-alert>
-        <v-alert
-          v-if="isErrorPostBook"
-          type="error"
-          class="alert"
-        >
-          Произошла ошибка
-        </v-alert>
-      </transition>
-    </div>
+    <AlertRequest
+      :is-error-request="isErrorRequest"
+      :is-success-request="isSuccessRequest"
+    />
   </v-container>
 </template>
 
@@ -68,14 +64,15 @@ import Book from "@/components/Book";
 import Popup from "@/components/Popup";
 import {api} from "@/api/api";
 import FormEditBooks from "@/components/FormEditBooks";
+import AlertRequest from "@/components/AlertRequest";
 export default {
-	components: {FormEditBooks,FormAddBooks,Book, Popup},
+	components: {AlertRequest,FormEditBooks,FormAddBooks,Book, Popup},
 	data: () => ({
 		show: true,
 		books: [],
 		booksEdit: {},
-		isSuccessPostBook: false,
-		isErrorPostBook: false,
+		isSuccessRequest: false,
+		isErrorRequest: false,
 		booksTest: [
 			{title: "Тьма после рассвета",author: "Александра Маринина",year: 1994,genre: "История",price: 3, cover: {image: "1.jpeg", nameCover: "Обложка 1"}},
 			{title: "Шатун",author: "Ерофей Трофимов",year: 1925195,genre: "История",price: 252, cover: {image: "2.jpeg", nameCover: "Обложка 2"}},
@@ -89,6 +86,9 @@ export default {
 			{title: "Боб",author: "Елена Бриолле",year: 20403,genre: "Комедия",price: 113, cover: {image: "10.jpeg", nameCover: "Обложка 10"}},
 		],
 	}),
+	computed: {
+
+	},
 	mounted() {
 		this.getBooks();
 	},
@@ -97,14 +97,16 @@ export default {
 			try {
 				await api.post("/books", form);
 				console.log(form)
-				this.isSuccessPostBook = true;
+				this.isSuccessRequest = true;
+				this.handlerRequest()
 			} catch (e) {
-				this.isErrorPostBook = true;
+				this.isErrorRequest = true;
+				console.log(e)
 			}
 		},
 		async deleteBook(id) {
 			try {
-				await api.delete("/books/"+ id)
+				await api.delete("/books/"+ id);
 			} catch (e) {
 				console.log(e)
 			}
@@ -128,7 +130,10 @@ export default {
 					title: this.booksEdit.title,
 					year: this.booksEdit.year,
 				});
+				this.isSuccessRequest = true;
+				this.handlerRequest()
 			} catch (e) {
+				this.isErrorRequest = true;
 				console.log(e)
 			}
 		},
@@ -137,10 +142,10 @@ export default {
 				await Promise.all(
 					this.booksTest.map(async book => await api.post("/books",book))
 				)
-				this.isSuccessPostBook = true;
+				this.isSuccessRequest = true;
 				this.handlerRequest()
 			} catch (e) {
-				this.isErrorPostBook = true;
+				this.isErrorRequest = true;
 				this.handlerRequest()
 				console.log(e)
 			}
@@ -151,15 +156,23 @@ export default {
 		},
 		handlerRequest() {
 			setTimeout(() => {
-				this.isSuccessPostBook = false;
-				this.isErrorPostBook = false;
+				this.isSuccessRequest = false;
+				this.isErrorRequest = false;
 			},2000)
-		}
+		},
+		// computed: {
+		// 	deleteBookLocal(id) {
+		// 		this.books.filter(book => book._id === id);
+		// 	}
+		// }
 	}
 }
 </script>
 
 <style>
+#example-2 {
+  z-index: 222;
+}
 .bounce-enter-active {
   animation: bounce-in .5s;
 }
@@ -177,11 +190,5 @@ export default {
     transform: scale(1);
   }
 }
-.alert {
-  position: fixed;
-  top: 50%;
-  left: 37%;
-  width: 450px;
-  margin: 0;
-}
+
 </style>
