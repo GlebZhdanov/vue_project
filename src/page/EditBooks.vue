@@ -1,15 +1,22 @@
 <template>
   <v-container>
-    <v-btn @click="$refs.modalNameAdd.openPopup()">
-      Создать книгу
-    </v-btn>
-    <v-btn
-      elevation="2"
-      raised
-      @click="postBooksTest"
+    <v-row
+      align="center"
+      class="pt-10"
     >
-      Получить книги
-    </v-btn>
+      <v-btn
+        elevation="2"
+        raised
+        class="mr-5 ml-4"
+        color="success"
+        @click="postBooksTest"
+      >
+        Создание тестовых книг
+      </v-btn>
+      <v-btn @click="$refs.modalNameAdd.openPopup()">
+        Создать книгу
+      </v-btn>
+    </v-row>
     <v-row>
       <Book
         v-for="book in books"
@@ -36,30 +43,32 @@
       >
         Произошла ошибка
       </v-alert>
-      <FormAddBooks @createBook="postBook" />
+      <FormAddBooks
+        @createBook="postBook"
+      />
     </Popup>
     <Popup
       ref="modalNameEdit"
     >
-      <v-alert
-        v-if="isSuccessPostBook"
-        class="alert"
-        type="success"
-      >
-        Запрос прошел успешно
-      </v-alert>
-      <v-alert
-        v-if="isErrorPostBook"
-        type="error"
-        class="alert"
-      >
-        Произошла ошибка
-      </v-alert>
       <FormEditBooks
         v-model="booksEdit"
         @editBook="editPostBooks"
       />
     </Popup>
+    <v-alert
+      v-if="isSuccessPostBook"
+      class="alert"
+      type="success"
+    >
+      Запрос прошел успешно
+    </v-alert>
+    <v-alert
+      v-if="isErrorPostBook"
+      type="error"
+      class="alert"
+    >
+      Произошла ошибка
+    </v-alert>
   </v-container>
 </template>
 
@@ -74,7 +83,7 @@ export default {
 	data: () => ({
 		books: [],
 		booksEdit: {},
-		isSuccessPostBook: false,
+		isSuccessPostBook: true,
 		isErrorPostBook: false,
 		booksTest: [
 			{title: "Тьма после рассвета",author: "Александра Маринина",year: 1994,genre: "История",price: 3, cover: {image: "1.jpeg", nameCover: "Обложка 1"}},
@@ -137,13 +146,23 @@ export default {
 				await Promise.all(
 					this.booksTest.map(async book => await api.post("/books",book))
 				)
+				this.isSuccessPostBook = true;
+				this.handlerRequest()
 			} catch (e) {
+				this.isErrorPostBook = true;
+				this.handlerRequest()
 				console.log(e)
 			}
 		},
 		editBooks(book) {
 			this.booksEdit = book
 			this.$refs.modalNameEdit.openPopup()
+		},
+		handlerRequest() {
+			setTimeout(() => {
+				this.isSuccessPostBook = false;
+				this.isErrorPostBook = false;
+			},2000)
 		}
 	}
 }
@@ -152,7 +171,8 @@ export default {
 <style>
 .alert {
   position: fixed;
-  top: 13%;
+  top: 15%;
+  left: 50%;
   width: 450px;
   margin: 0;
 }

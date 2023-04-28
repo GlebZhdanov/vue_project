@@ -7,8 +7,12 @@
       height="300px"
       :src="require('@/accets/img/cover' + book.cover.image)"
     />
-    <v-card-title class="pa-4">
-      {{ book.title }}
+    <v-card-title
+      class="pa-4"
+    >
+      <h3 class="title">
+        {{ book.title }}
+      </h3>
     </v-card-title>
     <v-card-text class="sa-4">
       <v-col
@@ -127,6 +131,11 @@ export default {
 </script>
 
 <style>
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 .book {
   background-color: antiquewhite;

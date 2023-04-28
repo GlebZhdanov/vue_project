@@ -1,35 +1,12 @@
 <template>
   <div>
-    <v-card
-      class="d-flex justify-space-between mb-6"
-      sm="3"
-    >
-      <v-select
-        v-model="selectedSort"
-        class="mt-6"
-        id-items:
-        :items="items"
-        label="Сортировка по цене и году"
-        outlined
-      />
-      <v-select
-        v-model="selectedSort"
-        class="mt-6"
-        id-items:
-        :items="items"
-        label="Сортировка по автору"
-        outlined
-      />
-      <v-text-field
-        v-model="searchName"
-        placeholder="Поиск по названию фильма"
-      />
+    <div v-if="!isBookLoading">
       <v-container
-        fluid
-        class="pa-0"
+        class="d-flex flex-column justify-space-between"
+        sm="2"
       >
         <v-select
-          v-model="selectedFruits"
+          v-model="selectedGenre"
           :items="genre"
           label="Выберите жанры"
           multiple
@@ -38,11 +15,11 @@
             <v-list-item
               ripple
               @mousedown.prevent
-              @click="toggle"
+              @click="toggleGenre"
             >
               <v-list-item-action>
-                <v-icon :color="selectedFruits.length > 0 ? 'indigo darken-4' : ''">
-                  {{ icon }}
+                <v-icon :color="selectedGenre.length > 0 ? 'indigo darken-4' : ''">
+                  {{ iconGenre }}
                 </v-icon>
               </v-list-item-action>
               <v-list-item-content>
@@ -54,14 +31,56 @@
             <v-divider class="mt-1" />
           </template>
         </v-select>
+        <v-select
+          v-model="selectedAuthor"
+          :items="getAuthorBook"
+          label="Выберите авторов"
+          multiple
+          class="pt-0"
+        >
+          <template #prepend-item>
+            <v-list-item
+              ripple
+              @mousedown.prevent
+              @click="toggleAuthor"
+            >
+              <v-list-item-action>
+                <v-icon :color="selectedAuthor.length > 0 ? 'indigo darken-4' : ''">
+                  {{ iconAuthor }}
+                </v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>
+                  Выбрать всех авторов
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-divider class="mt-1" />
+          </template>
+        </v-select>
+        <v-text-field
+          v-model="searchName"
+          class="ma-0 pa-0"
+          placeholder="Поиск по названию фильма"
+        />
+        <v-col
+          class="mx-20 pa-0"
+          md="4"
+        >
+          <v-select
+            v-model="selectedSort"
+            class="ma-0"
+            id-items:
+            :items="items"
+            label="Сортировка по цене и году"
+            outlined
+          />
+        </v-col>
       </v-container>
-    </v-card>
-    <div v-if="!isBookLoading">
       <v-container>
         <v-row>
-          {{ getAuthorBook }}
           <Book
-            v-for="book in sortedAndGenreBook"
+            v-for="book in sortedAndAuthorBook"
             :book="book"
             :is-button-main-page="true"
           />
@@ -92,15 +111,24 @@ export default {
 			"Боевик",
 			"Детектив",
 		],
-		selectedFruits: [
+		selectedGenre: [
 			"История",
 			"Фантастика",
 			"Комедия",
 			"Боевик",
 			"Детектив",],
+		selectedAuthor: [
+			"Александра Маринина",
+			"Ерофей Трофимов",
+			"Толкин",
+			"Anne Dar",
+			"Сергей Лукьяненко",
+			"Альбина Нури",
+			"Прилепин",
+			"Татьяна Устинова",
+			"Елена Бриолле"],
 		selectedSort: "",
 		searchName: "",
-		searchAuthor: "",
 		books: [],
 		isBookLoading: false,
 	}),
@@ -112,20 +140,34 @@ export default {
 			return [...this.sortedBooks].filter(book => book.title.toLowerCase().includes(this.searchName.toLowerCase()))
 		},
 		sortedAndGenreBook() {
-			return [...this.sortedAndSearchBook].filter(book => this.selectedFruits.includes(book.genre))
+			return [...this.sortedAndSearchBook].filter(book => this.selectedGenre.includes(book.genre))
 		},
-		likesAllFruit () {
-			return this.selectedFruits.length === this.genre.length
+		sortedAndAuthorBook() {
+			return [...this.sortedAndGenreBook].filter(book => this.selectedAuthor.includes(book.author))
 		},
-		likesSomeFruit () {
-			return this.selectedFruits.length > 0 && !this.likesAllFruit
+		likesAllGenre () {
+			return this.selectedGenre.length === this.genre.length
+		},
+		likesSomeGenre () {
+			return this.selectedGenre.length > 0 && !this.likesAllGenre
+		},
+		likesAllAuthor () {
+			return this.selectedAuthor.length === this.getAuthorBook.length
+		},
+		likesSomeAuthor () {
+			return this.selectedAuthor.length > 0 && !this.likesAllAuthor
 		},
 		getAuthorBook() {
-			return this.books.map(books => books.author);
+			return  Array.from(new Set(this.books.map(books => books.author)));
 		},
-		icon () {
-			if (this.likesAllFruit) return "mdi-close-box"
-			if (this.likesSomeFruit) return "mdi-minus-box"
+		iconGenre () {
+			if (this.likesAllGenre) return "mdi-close-box"
+			if (this.likesSomeGenre) return "mdi-minus-box"
+			return "mdi-checkbox-blank-outline"
+		},
+		iconAuthor () {
+			if (this.likesAllAuthor) return "mdi-close-box"
+			if (this.likesSomeAuthor) return "mdi-minus-box"
 			return "mdi-checkbox-blank-outline"
 		},
 	},
@@ -145,12 +187,21 @@ export default {
 				console.log(e)
 			}
 		},
-		toggle () {
+		toggleGenre () {
 			this.$nextTick(() => {
-				if (this.likesAllFruit) {
-					this.selectedFruits = []
+				if (this.likesAllGenre) {
+					this.selectedGenre = []
 				} else {
-					this.selectedFruits = this.genre.slice()
+					this.selectedGenre = this.genre.slice()
+				}
+			})
+		},
+		toggleAuthor () {
+			this.$nextTick(() => {
+				if (this.likesAllAuthor) {
+					this.selectedAuthor = []
+				} else {
+					this.selectedAuthor = this.getAuthorBook.slice()
 				}
 			})
 		},

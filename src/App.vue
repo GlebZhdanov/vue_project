@@ -26,5 +26,8 @@ export default {
   min-height: 100vh;
   margin: 0 auto;
 }
+.v-application a {
+  color: red;
+}
 
 </style>

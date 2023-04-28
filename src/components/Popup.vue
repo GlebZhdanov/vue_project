@@ -13,16 +13,6 @@
           class="close_image"
           @click="closePopup"
         />
-        <!--      <template #activator="{ on, attrs }">-->
-        <!--        <v-btn-->
-        <!--          color="primary"-->
-        <!--          dark-->
-        <!--          v-bind="attrs"-->
-        <!--          v-on="on"-->
-        <!--        >-->
-        <!--          Open Dialog-->
-        <!--        </v-btn>-->
-        <!--      </template>-->
         <v-card>
           <slot />
         </v-card>
@@ -42,16 +32,6 @@ export default {
 	data: () => ({
 		popupVisible: false,
 	}),
-	// watch: {
-	// 	value(newValue) {
-	// 		console.log(newValue)
-	// 		this.popupVisible = newValue
-	// 	}
-	// },
-	//
-	// created() {
-	// 	this.popupVisible = this.value
-	// },
 	methods: {
 		closePopup() {
 			this.popupVisible = false;
