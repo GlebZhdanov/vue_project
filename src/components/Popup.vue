@@ -27,11 +27,20 @@ export default {
 		value: {
 			type: Boolean,
 			default: false,
+		},
+		popupCloseTrigger: {
+			type: Boolean,
+			default: false,
 		}
 	},
 	data: () => ({
 		popupVisible: false,
 	}),
+	watch: {
+		popupCloseTrigger() {
+			this.closePopup()
+		}
+	},
 	methods: {
 		closePopup() {
 			this.popupVisible = false;

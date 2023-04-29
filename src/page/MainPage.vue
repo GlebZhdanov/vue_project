@@ -80,10 +80,19 @@
       <v-container>
         <v-row>
           <Book
-            v-for="book in sortedAndAuthorBook"
+            v-for="book in filteredBooks"
             :book="book"
-            :is-button-main-page="true"
-          />
+          >
+            <v-btn
+              block
+              color="black"
+              text
+              :disabled="isBookDisabled(book)"
+              @click="addBook(book)"
+            >
+              Добавить в корзину
+            </v-btn>
+          </Book>
         </v-row>
       </v-container>
     </div>
@@ -97,6 +106,7 @@
 import Book from "@/components/Book";
 import {api} from "@/api/api";
 import Loader from "@/components/Loader";
+import {mapMutations} from "vuex";
 export default {
 	components: {Loader,Book},
 	data: () => ({
@@ -111,40 +121,33 @@ export default {
 			"Боевик",
 			"Детектив",
 		],
-		selectedGenre: [
-			"История",
-			"Фантастика",
-			"Комедия",
-			"Боевик",
-			"Детектив",],
-		selectedAuthor: [
-			"Александра Маринина",
-			"Ерофей Трофимов",
-			"Толкин",
-			"Anne Dar",
-			"Сергей Лукьяненко",
-			"Альбина Нури",
-			"Прилепин",
-			"Татьяна Устинова",
-			"Елена Бриолле"],
+		selectedGenre: [],
+		selectedAuthor: [],
 		selectedSort: "",
 		searchName: "",
 		books: [],
 		isBookLoading: false,
 	}),
 	computed: {
-		sortedBooks() {
-			return [...this.books].sort((a, b) => a[this.selectedSort] - b[this.selectedSort])
+		filteredBooks() {
+			let books = this.books;
+
+			if(this.selectedSort) {
+				books = books.sort((a, b) => a[this.selectedSort] - b[this.selectedSort])
+			}
+			if (this.searchName) {
+				books = books.filter(book => book.title.toLowerCase().includes(this.searchName.toLowerCase()))
+			}
+			if(this.selectedGenre.length) {
+				books = books.filter(book => this.selectedGenre.includes(book.genre))
+			}
+			if(this.selectedAuthor.length) {
+				books = books.filter(book => this.selectedAuthor.includes(book.author))
+			}
+
+			return books;
 		},
-		sortedAndSearchBook() {
-			return [...this.sortedBooks].filter(book => book.title.toLowerCase().includes(this.searchName.toLowerCase()))
-		},
-		sortedAndGenreBook() {
-			return [...this.sortedAndSearchBook].filter(book => this.selectedGenre.includes(book.genre))
-		},
-		sortedAndAuthorBook() {
-			return [...this.sortedAndGenreBook].filter(book => this.selectedAuthor.includes(book.author))
-		},
+
 		likesAllGenre () {
 			return this.selectedGenre.length === this.genre.length
 		},
@@ -170,11 +173,17 @@ export default {
 			if (this.likesSomeAuthor) return "mdi-minus-box"
 			return "mdi-checkbox-blank-outline"
 		},
+		basketBooks() {
+			return this.$store.getters.getAllBasketBooks;
+		},
 	},
 	mounted() {
 		this.getBooks();
 	},
 	methods: {
+		...mapMutations([
+			"addBasketBook",
+		]),
 		async getBooks() {
 			try {
 				this.isBookLoading = true;
@@ -182,7 +191,7 @@ export default {
 					const response = await api.get("/books");
 					this.books = response.data;
 					this.isBookLoading = false;
-				},800)
+				},600)
 			} catch (e) {
 				console.log(e)
 			}
@@ -204,6 +213,12 @@ export default {
 					this.selectedAuthor = this.getAuthorBook.slice()
 				}
 			})
+		},
+		isBookDisabled(book) {
+			return this.basketBooks.some(item => item._id === book._id)
+		},
+		addBook(book) {
+			this.addBasketBook(book)
 		},
 	},
 }

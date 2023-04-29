@@ -61,7 +61,7 @@
     <v-card-actions class="mt-4 justify-center">
       <v-btn
         color="#C5CAE9"
-        :disabled="!form.cover || !valid"
+        :disabled="!form || !valid"
         @click="editBook"
       >
         Редактировать

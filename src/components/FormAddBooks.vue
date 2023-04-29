@@ -10,7 +10,7 @@
 
     <v-text-field
       v-model="form.title"
-      :rules="yearRules"
+      :rules="nameRules"
       label="Название"
       required
     />
@@ -28,19 +28,20 @@
     />
     <v-text-field
       v-model="form.price"
-      :rules="authorRules"
+      :rules="priceRules"
       label="Цена"
       required
     />
     <v-select
       v-model="form.genre"
       :items="items"
-      :rules="[v => !!v || 'Выберете жанр']"
+      :rules="genreRules"
       label="Выбрать жанр"
       required
     />
     <v-select
       v-model="form.cover"
+      :rules="coverRules"
       :items="itemsCover"
       label="Выберете обложку"
     >
@@ -82,6 +83,12 @@
 
 <script>
 export default {
+	props: {
+		clearTrigger: {
+			type: Boolean,
+			default: false,
+		}
+	},
 	data: () => ({
 		form: {
 			title: "",
@@ -92,11 +99,23 @@ export default {
 			genre: "",
 		},
 		valid: true,
+		nameRules: [
+			v => !!v || "Введите название",
+		],
 		yearRules: [
 			v => !!v || "Введите год",
 		],
 		authorRules: [
 			v => !!v || "Введите автора",
+		],
+		priceRules: [
+			v => !!v || "Введите цену",
+		],
+		genreRules: [
+			v => !!v || "Выберите жанр",
+		],
+		coverRules: [
+			v => !!v || "Выберите обложку",
 		],
 		select: null,
 		items: [
@@ -120,6 +139,11 @@ export default {
 			{ nameCover: "Обложка 10", image: "10.jpeg"},
 		],
 	}),
+	watch: {
+		clearTrigger() {
+			this.reset();
+		}
+	},
 	methods: {
 		reset () {
 			this.$refs.form.reset()
@@ -130,7 +154,7 @@ export default {
 		createBook () {
 			this.$emit("createBook", this.form);
 		}
-	},
+	}
 }
 </script>
 

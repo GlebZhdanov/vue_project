@@ -34,7 +34,7 @@ export default {
 .loading.bar div{
   width: 100px;
   height: 30px;
-  background: #3b88b4;
+  background: #99ec81;
   position: absolute;
   top: 35px;
   left: 45px;

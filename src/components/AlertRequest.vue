@@ -3,16 +3,15 @@
     <transition name="bounce">
       <v-alert
         v-if="isSuccessRequest"
-        :class="{ popup: isPopup }"
-        class="alert"
+        :class="[isPopup ? alertPopup : alertPage, alert]"
         type="success"
       >
         Запрос прошел успешно
       </v-alert>
       <v-alert
         v-if="isErrorRequest"
+        :class="[isPopup ? alertPopup : alertPage, alert]"
         type="error"
-        class="alert"
       >
         Произошла ошибка
       </v-alert>
@@ -34,7 +33,14 @@ export default {
 		isPopup: {
 			type: Boolean,
 			required: false,
-		}
+		},
+	},
+	data: function() {
+		return {
+			alertPopup: "alert_popup",
+			alertPage: "alert_page",
+			alert: "alert",
+		};
 	},
 }
 </script>
@@ -61,8 +67,13 @@ export default {
   }
 }
 
-.popup {
-  top: 10%;
+.alert_popup {
+  top: 9.5%;
+}
+
+.alert_page {
+  top: 45%;
+  left: 33%;
 }
 
 .alert {

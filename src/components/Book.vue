@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="mx-auto my-12"
-    max-width="270"
+    max-width="250"
   >
     <v-img
       height="300px"
@@ -33,99 +33,19 @@
       </v-col>
     </v-card-text>
     <v-divider class="mx-4" />
-    <v-btn
-      v-if="isButtonBasketPage"
-      block
-      color="black"
-      text
-      @click="deleteBookBasket"
-    >
-      Удалить из корзины
-    </v-btn>
-    <v-btn
-      v-if="isButtonEditPage"
-      block
-      color="black"
-      text
-      @click="deleteBook"
-    >
-      Удалить
-    </v-btn>
-    <v-btn
-      v-if="isButtonEditPage"
-      ref="parent-ref.modalNameEdit.openPopup()"
-      block
-      color="black"
-      text
-      @click="editBook"
-    >
-      Редактировать
-    </v-btn>
-    <v-btn
-      v-if="isButtonMainPage"
-      block
-      color="black"
-      text
-      :disabled="disabled"
-      @click="addBook"
-    >
-      Добавить в корзину
-    </v-btn>
+    <slot />
   </v-card>
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
 
 export default {
+	name: "Book",
 	props: {
 		book: {
 			type: Object,
 			required: true,
 		},
-		isButtonMainPage: {
-			type: Boolean,
-			require: true,
-		},
-		isButtonBasketPage: {
-			type: Boolean,
-			require: true,
-		},
-		isButtonEditPage: {
-			type: Boolean,
-			require: true,
-		},
-	},
-	data: () => ({
-		disabled: false,
-	}),
-	methods: {
-		...mapMutations([
-			"addBasketBook",
-			"deleteBasketBook",
-		]),
-		addBook() {
-			this.addBasketBook(this.book)
-		},
-		deleteBookBasket() {
-			this.deleteBasketBook(this.book)
-		},
-		deleteBook() {
-			this.$emit("delete", this.book._id)
-		},
-		editBook() {
-			this.$emit("editBook", this.book)
-		},
-
-	},
-	// eslint-disable-next-line vue/order-in-components
-	watch: {
-		"$store.state.booksModule.basketBook": function() {
-			 this.disabled = this.$store.getters.getAllBasketBooks.some(item => item === this.book);
-		}
-		// handledDisabledButton() {
-		// 	return this.$store.getters.getAllBasketBooks.some(item => item === this.book);
-		// }
 	},
 }
 </script>
@@ -135,15 +55,5 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.book {
-  background-color: antiquewhite;
-  width: 200px;
-  cursor: pointer;
-}
-
-.block {
-  color: red;
 }
 </style>
