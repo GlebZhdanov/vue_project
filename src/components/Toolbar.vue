@@ -1,5 +1,7 @@
 <template>
-  <v-container class="pa-0">
+  <v-container
+    class="pa-0 pt-2"
+  >
     <v-select
       v-model="selectGenre"
       :items="getGenreBook"
@@ -105,15 +107,7 @@
 
 export default {
 	props: {
-		getAuthorBook: {
-			type: Array,
-			required: true,
-		},
-		getYearBook: {
-			type: Array,
-			required: true,
-		},
-		getGenreBook: {
+		books: {
 			type: Array,
 			required: true,
 		}
@@ -204,6 +198,15 @@ export default {
 				this.$emit("update:sort", val);
 			}
 		},
+		getAuthorBook() {
+			return  Array.from(new Set(this.books.map(books => books.author)));
+		},
+		getYearBook() {
+			return  Array.from(new Set(this.books.map(books => books.year)));
+		},
+		getGenreBook() {
+			return  Array.from(new Set(this.books.map(books => books.genre)));
+		},
 	},
 	methods: {
 		toggleGenre () {
@@ -244,5 +247,4 @@ export default {
 </script>
 
 <style>
-
 </style>

@@ -1,22 +1,24 @@
 <template>
   <div>
-    <div v-if="!isBookLoading">
+    <h2
+      v-if="books.length <= 0 && !isBookLoading"
+      class="grey--text text-darken-1 text-center pt-10"
+    >
+      Создайте книги
+    </h2>
+    <div v-if="!isBookLoading && books.length > 0">
       <v-container
         class="d-flex flex-column justify-space-between pb-0"
         sm="2"
       >
-        <SelectCustom
-          :get-author-book="getAuthorBook"
-          :get-year-book="getYearBook"
-          :get-genre-book="getGenreBook"
+        <Toolbar
+          :books="books"
           @update:genre="value => selectedGenre = value"
           @update:author="value => selectedAuthor = value"
           @update:name="value => searchName = value"
           @update:sort="value => selectedSort = value"
           @update:year="value => selectedYear = value"
         />
-      </v-container>
-      <v-container>
         <v-row>
           <Book
             v-for="book in filteredBooks"
@@ -51,15 +53,11 @@ import {api} from "@/api/api";
 import Loader from "@/components/Loader";
 import {mapMutations} from "vuex";
 import AlertRequest from "@/components/AlertRequest";
-import SelectCustom from "@/components/Toolbar";
+import Toolbar from "@/components/Toolbar";
 export default {
 	name: "MainPage",
-	components: {SelectCustom,AlertRequest,Loader,Book},
+	components: {Toolbar,AlertRequest,Loader,Book},
 	data: () => ({
-		items: [
-			{value: "year", text: "Году издания"},
-			{value: "price", text: "Цене"},
-		],
 		selectedGenre: [],
 		selectedAuthor: [],
 		selectedYear: [],
@@ -90,15 +88,6 @@ export default {
 			}
 
 			return books;
-		},
-		getAuthorBook() {
-			return  Array.from(new Set(this.books.map(books => books.author)));
-		},
-		getYearBook() {
-			return  Array.from(new Set(this.books.map(books => books.year)));
-		},
-		getGenreBook() {
-			return  Array.from(new Set(this.books.map(books => books.genre)));
 		},
 		basketBooks() {
 			return this.$store.getters.getAllBasketBooks;
