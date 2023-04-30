@@ -21,14 +21,15 @@
 
 <script>
 export default {
+	name: "AlertRequest",
 	props: {
 		isSuccessRequest: {
 			type: Boolean,
-			required: true,
+			required: false,
 		},
 		isErrorRequest: {
 			type: Boolean,
-			required: true,
+			required: false,
 		},
 		isPopup: {
 			type: Boolean,
@@ -66,16 +67,13 @@ export default {
     transform: scale(1);
   }
 }
-
 .alert_popup {
   top: 9.5%;
 }
-
 .alert_page {
   top: 45%;
   left: 33%;
 }
-
 .alert {
   position: fixed;
   width: 450px;

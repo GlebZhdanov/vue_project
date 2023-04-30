@@ -5,7 +5,7 @@
   >
     <v-img
       height="300px"
-      :src="require('@/accets/img/cover' + book.cover.image)"
+      :src="require('@/accets/img/cover' + `${book.cover.image}`)"
     />
     <v-card-title
       class="pa-4"

@@ -34,44 +34,6 @@
       </v-btn>
     </router-link>
   </v-bottom-navigation>
-
-  <!--    <v-tabs-->
-  <!--      background-color="transparent"-->
-  <!--      color="basil"-->
-  <!--      grow-->
-  <!--      class="pl-0"-->
-  <!--    >-->
-  <!--      <v-tab-->
-  <!--        link-->
-  <!--        class="tab pa-0"-->
-  <!--      >-->
-  <!--        <router-link-->
-  <!--          exact-active-class="link_active"-->
-  <!--          class="link"-->
-  <!--          to="/"-->
-  <!--        >-->
-  <!--          Просмотр книг-->
-  <!--        </router-link>-->
-  <!--      </v-tab>-->
-  <!--      <v-tab>-->
-  <!--        <router-link-->
-  <!--          exact-active-class="link_active"-->
-  <!--          to="/basket"-->
-  <!--          class="link"-->
-  <!--        >-->
-  <!--          Корзина ({{ allBookBasket.length }})-->
-  <!--        </router-link>-->
-  <!--      </v-tab>-->
-  <!--      <v-tab class="text&#45;&#45;red">-->
-  <!--        <router-link-->
-  <!--          exact-active-class="link_active"-->
-  <!--          class="link"-->
-  <!--          to="/edit"-->
-  <!--        >-->
-  <!--          Редактирование книги-->
-  <!--        </router-link>-->
-  <!--      </v-tab>-->
-  <!--    </v-tabs>-->
 </template>
 
 <script>
@@ -91,7 +53,10 @@ export default {
 .link {
   text-decoration: none;
   height: 100%;
-  display:table-cell; vertical-align:middle; text-align:center;
+  display:table-cell;
+  vertical-align:middle;
+  text-align:center;
+
 }
 
 .link_active {

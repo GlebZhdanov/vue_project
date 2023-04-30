@@ -25,6 +25,7 @@ module.exports = {
 		"vue/multi-word-component-names": 0,
 		"vue/valid-v-for": "off",
 		"vue/no-unused-vars": "off",
+		"vue/valid-v-model": "off",
 		"linebreak-style": [
 			"error",
 			"unix"

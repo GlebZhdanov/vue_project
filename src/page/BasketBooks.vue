@@ -4,6 +4,7 @@
       <v-row>
         <Book
           v-for="book in allBookBasket"
+          :key="book._id"
           :book="book"
           :is-button-basket-page="true"
         >
@@ -24,10 +25,16 @@
 <script>
 import Book from "@/components/Book";
 import {mapMutations} from "vuex";
+import Select from "@/components/Toolbar";
+import SelectCustom from "@/components/Toolbar";
 
 export default {
 	name: "BasketPage",
 	components: {Book},
+	data: () => ({
+		genre: [],
+		author: [],
+	}),
 	methods: {
 		...mapMutations([
 			"deleteBasketBook",

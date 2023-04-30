@@ -2,85 +2,25 @@
   <div>
     <div v-if="!isBookLoading">
       <v-container
-        class="d-flex flex-column justify-space-between"
+        class="d-flex flex-column justify-space-between pb-0"
         sm="2"
       >
-        <v-select
-          v-model="selectedGenre"
-          :items="genre"
-          label="Выберите жанры"
-          multiple
-        >
-          <template #prepend-item>
-            <v-list-item
-              ripple
-              @mousedown.prevent
-              @click="toggleGenre"
-            >
-              <v-list-item-action>
-                <v-icon :color="selectedGenre.length > 0 ? 'indigo darken-4' : ''">
-                  {{ iconGenre }}
-                </v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title>
-                  Выбрать все жанры
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider class="mt-1" />
-          </template>
-        </v-select>
-        <v-select
-          v-model="selectedAuthor"
-          :items="getAuthorBook"
-          label="Выберите авторов"
-          multiple
-          class="pt-0"
-        >
-          <template #prepend-item>
-            <v-list-item
-              ripple
-              @mousedown.prevent
-              @click="toggleAuthor"
-            >
-              <v-list-item-action>
-                <v-icon :color="selectedAuthor.length > 0 ? 'indigo darken-4' : ''">
-                  {{ iconAuthor }}
-                </v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title>
-                  Выбрать всех авторов
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider class="mt-1" />
-          </template>
-        </v-select>
-        <v-text-field
-          v-model="searchName"
-          class="ma-0 pa-0"
-          placeholder="Поиск по названию фильма"
+        <SelectCustom
+          :get-author-book="getAuthorBook"
+          :get-year-book="getYearBook"
+          :get-genre-book="getGenreBook"
+          @update:genre="value => selectedGenre = value"
+          @update:author="value => selectedAuthor = value"
+          @update:name="value => searchName = value"
+          @update:sort="value => selectedSort = value"
+          @update:year="value => selectedYear = value"
         />
-        <v-col
-          class="mx-20 pa-0"
-          md="4"
-        >
-          <v-select
-            v-model="selectedSort"
-            class="ma-0"
-            id-items:
-            :items="items"
-            label="Сортировка по цене и году"
-            outlined
-          />
-        </v-col>
       </v-container>
       <v-container>
         <v-row>
           <Book
             v-for="book in filteredBooks"
+            :key="book._id"
             :book="book"
           >
             <v-btn
@@ -99,6 +39,9 @@
     <div>
       <Loader v-if="isBookLoading" />
     </div>
+    <AlertRequest
+      :is-error-request="isErrorRequestPage"
+    />
   </div>
 </template>
 
@@ -107,26 +50,24 @@ import Book from "@/components/Book";
 import {api} from "@/api/api";
 import Loader from "@/components/Loader";
 import {mapMutations} from "vuex";
+import AlertRequest from "@/components/AlertRequest";
+import SelectCustom from "@/components/Toolbar";
 export default {
-	components: {Loader,Book},
+	name: "MainPage",
+	components: {SelectCustom,AlertRequest,Loader,Book},
 	data: () => ({
 		items: [
 			{value: "year", text: "Году издания"},
 			{value: "price", text: "Цене"},
 		],
-		genre: [
-			"История",
-			"Фантастика",
-			"Комедия",
-			"Боевик",
-			"Детектив",
-		],
 		selectedGenre: [],
 		selectedAuthor: [],
+		selectedYear: [],
 		selectedSort: "",
 		searchName: "",
 		books: [],
 		isBookLoading: false,
+		isErrorRequestPage: false,
 	}),
 	computed: {
 		filteredBooks() {
@@ -144,34 +85,20 @@ export default {
 			if(this.selectedAuthor.length) {
 				books = books.filter(book => this.selectedAuthor.includes(book.author))
 			}
+			if(this.selectedYear.length) {
+				books = books.filter(book => this.selectedYear.includes(book.year))
+			}
 
 			return books;
-		},
-
-		likesAllGenre () {
-			return this.selectedGenre.length === this.genre.length
-		},
-		likesSomeGenre () {
-			return this.selectedGenre.length > 0 && !this.likesAllGenre
-		},
-		likesAllAuthor () {
-			return this.selectedAuthor.length === this.getAuthorBook.length
-		},
-		likesSomeAuthor () {
-			return this.selectedAuthor.length > 0 && !this.likesAllAuthor
 		},
 		getAuthorBook() {
 			return  Array.from(new Set(this.books.map(books => books.author)));
 		},
-		iconGenre () {
-			if (this.likesAllGenre) return "mdi-close-box"
-			if (this.likesSomeGenre) return "mdi-minus-box"
-			return "mdi-checkbox-blank-outline"
+		getYearBook() {
+			return  Array.from(new Set(this.books.map(books => books.year)));
 		},
-		iconAuthor () {
-			if (this.likesAllAuthor) return "mdi-close-box"
-			if (this.likesSomeAuthor) return "mdi-minus-box"
-			return "mdi-checkbox-blank-outline"
+		getGenreBook() {
+			return  Array.from(new Set(this.books.map(books => books.genre)));
 		},
 		basketBooks() {
 			return this.$store.getters.getAllBasketBooks;
@@ -185,34 +112,17 @@ export default {
 			"addBasketBook",
 		]),
 		async getBooks() {
+			this.isBookLoading = true;
 			try {
-				this.isBookLoading = true;
-				setTimeout( async () => {
-					const response = await api.get("/books");
-					this.books = response.data;
-					this.isBookLoading = false;
-				},600)
+				const response = await api.get("/books");
+				this.books = response.data;
+				this.isBookLoading = false;
 			} catch (e) {
-				console.log(e)
+				this.isErrorRequestPage = true;
 			}
-		},
-		toggleGenre () {
-			this.$nextTick(() => {
-				if (this.likesAllGenre) {
-					this.selectedGenre = []
-				} else {
-					this.selectedGenre = this.genre.slice()
-				}
-			})
-		},
-		toggleAuthor () {
-			this.$nextTick(() => {
-				if (this.likesAllAuthor) {
-					this.selectedAuthor = []
-				} else {
-					this.selectedAuthor = this.getAuthorBook.slice()
-				}
-			})
+			finally {
+				this.isBookLoading = false;
+			}
 		},
 		isBookDisabled(book) {
 			return this.basketBooks.some(item => item._id === book._id)

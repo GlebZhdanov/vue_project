@@ -22,6 +22,7 @@
         <v-row>
           <Book
             v-for="book in books"
+            :key="book._id"
             :book="book"
             :is-button-edit-page="true"
           >
@@ -48,7 +49,7 @@
           ref="modalNameAdd"
           :popup-close-trigger="popupCloseTrigger"
         >
-          <FormAddBooks
+          <FormBook
             :clear-trigger="formClearTrigger"
             @createBook="postBook"
           />
@@ -62,8 +63,9 @@
           ref="modalNameEdit"
           :popup-close-trigger="popupCloseTrigger"
         >
-          <FormEditBooks
+          <FormBook
             v-model="booksEdit"
+            :is-edit-book="true"
             @editBook="editPostBooks"
           />
           <AlertRequest
@@ -85,16 +87,15 @@
 </template>
 
 <script>
-import FormAddBooks from "@/components/FormAddBooks";
 import Book from "@/components/Book";
 import Popup from "@/components/Popup";
 import {api} from "@/api/api";
-import FormEditBooks from "@/components/FormEditBooks";
 import AlertRequest from "@/components/AlertRequest";
 import {booksTest} from "@/accets/const/constant";
 import Loader from "@/components/Loader";
+import FormBook from "@/components/FormBook";
 export default {
-	components: {Loader,AlertRequest,FormEditBooks,FormAddBooks,Book, Popup},
+	components: {FormBook,Loader,AlertRequest,Book, Popup},
 	data: () => ({
 		show: true,
 		books: [],
@@ -117,7 +118,6 @@ export default {
 		async postBook(form) {
 			try {
 				await api.post("/books", form);
-				console.log(form)
 				this.isSuccessRequest = true;
 				this.handlerRequest();
 				await this.getBooks();
@@ -137,13 +137,17 @@ export default {
 			}
 		},
 		async getBooks() {
+			this.isBookLoading = true;
 			try {
-				this.isBookLoading = true;
 				const response = await api.get("/books");
 				this.books = response.data;
 				this.isBookLoading = false;
 			} catch (e) {
+				this.isErrorRequestPage = true;
 				console.log(e)
+			}
+			finally {
+				this.isBookLoading = false;
 			}
 		},
 		async editPostBooks() {
