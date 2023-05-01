@@ -134,11 +134,10 @@ export default {
 		},
 		valid: true,
 		numberRule: [
-			// v  => {
-			// 	if (!v.trim()) return true;
-			// 	if (!isNaN(parseFloat(v))) return true;
-			// 	return "Введите числовое значение";
-			// },
+			v  => {
+				if (!isNaN(parseFloat(v))) return true;
+				return "Введите числовое значение";
+			},
 		],
 		nameRules: [
 			v => !!v || "Введите название",

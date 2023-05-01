@@ -26,6 +26,7 @@ module.exports = {
 		"vue/valid-v-for": "off",
 		"vue/no-unused-vars": "off",
 		"vue/valid-v-model": "off",
+		"vue/no-side-effects-in-computed-properties": "off",
 		"linebreak-style": [
 			"error",
 			"unix"

@@ -136,7 +136,7 @@ export default {
 	}),
 	computed: {
 		filteredBooks() {
-			let books = this.books;
+			let books = this.books.sort((a, b) => b["year"] - a["year"]);
 
 			if (this.selectedSort) {
 				books = books.sort((a,b) => a[this.selectedSort] - b[this.selectedSort])
@@ -156,6 +156,7 @@ export default {
 
 			return books;
 		},
+
 	},
 	mounted() {
 		this.getBooks();

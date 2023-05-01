@@ -1,19 +1,27 @@
-# vue_project
+# Books
 
-## Project setup
-```
-npm install
-```
+## Описание проекта
+Небольшое приложение для работы с книгами.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+##  Стек
+- HTML, CSS
+- Vue
+- Vuex
+- Eslint
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Функционал
+- Приложение содержить 3 страницы.
+- Доступен фильтр по персонажем.
+- Cпособ управления состоянием приложения - Redux.
+- Компонент Card покрыт тестами с помощью фрейворка Jest.
+- Открытие и закрытие модального окна с информацией о персонаже протестировано с помощью Сypress.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+##  Установка зависимостей
+
+##### `npm i` – установить зависимости проекта
+
+##### `npm run serve` – запуск devServer на http://localhost:8000/
+
+##### `npm run build` – production сборка проекта
+
+##### `npm run lint:ts` – запустить eslint
