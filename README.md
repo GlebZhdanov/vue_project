@@ -18,7 +18,7 @@
 
 ##### `npm i` – установить зависимости проекта
 
-##### `npm run serve` – запуск devServer на http://localhost:8000/
+##### `npm run serve` – запуск devServer на http://localhost:8081/
 
 ##### `npm run build` – production сборка проекта
 
