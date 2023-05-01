@@ -30,40 +30,12 @@
             class="d-flex flex-column justify-space-between pb-0"
             sm="2"
           >
-            <Toolbar
+            <BookItem
               :books="books"
-              @update:genre="value => selectedGenre = value"
-              @update:author="value => selectedAuthor = value"
-              @update:name="value => searchName = value"
-              @update:sort="value => selectedSort = value"
-              @update:year="value => selectedYear = value"
+              :is-edit-page="true"
+              @deleteBook="deleteBook"
+              @editBooks="editBooks"
             />
-            <v-row>
-              <Book
-                v-for="book in filteredBooks"
-                :key="book._id"
-                :book="book"
-                :is-button-edit-page="true"
-              >
-                <v-btn
-                  block
-                  color="black"
-                  text
-                  @click="deleteBook(book._id)"
-                >
-                  Удалить
-                </v-btn>
-                <v-btn
-                  ref="parent-ref.modalNameEdit.openPopup()"
-                  block
-                  color="black"
-                  text
-                  @click="editBooks(book)"
-                >
-                  Редактировать
-                </v-btn>
-              </Book>
-            </v-row>
           </v-container>
         </div>
         <Popup
@@ -108,22 +80,16 @@
 </template>
 
 <script>
-import Book from "@/components/Book";
 import Popup from "@/components/Popup";
 import {api} from "@/api/api";
 import AlertRequest from "@/components/AlertRequest";
 import {booksTest} from "@/accets/const/constant";
 import Loader from "@/components/Loader";
 import FormBook from "@/components/FormBook";
-import Toolbar from "@/components/Toolbar";
+import BookItem from "@/components/BookItem";
 export default {
-	components: {Toolbar,FormBook,Loader,AlertRequest,Book,Popup},
+	components: {BookItem,FormBook,Loader,AlertRequest,Popup},
 	data: () => ({
-		selectedGenre: [],
-		selectedAuthor: [],
-		selectedYear: [],
-		selectedSort: "",
-		searchName: "",
 		books: [],
 		booksEdit: {},
 		isSuccessRequest: false,
@@ -134,30 +100,6 @@ export default {
 		popupCloseTrigger: false,
 		isBookLoading: false,
 	}),
-	computed: {
-		filteredBooks() {
-			let books = this.books.sort((a, b) => b["year"] - a["year"]);
-
-			if (this.selectedSort) {
-				books = books.sort((a,b) => a[this.selectedSort] - b[this.selectedSort])
-			}
-			if (this.searchName) {
-				books = books.filter(book => book.title.toLowerCase().includes(this.searchName.toLowerCase()))
-			}
-			if (this.selectedGenre.length) {
-				books = books.filter(book => this.selectedGenre.includes(book.genre))
-			}
-			if (this.selectedAuthor.length) {
-				books = books.filter(book => this.selectedAuthor.includes(book.author))
-			}
-			if (this.selectedYear.length) {
-				books = books.filter(book => this.selectedYear.includes(book.year))
-			}
-
-			return books;
-		},
-
-	},
 	mounted() {
 		this.getBooks();
 	},
