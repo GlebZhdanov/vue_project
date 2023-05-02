@@ -6,7 +6,7 @@
   >
     <v-card-title class="justify-center">
       <span
-        v-if="isEditBook"
+        v-if="isEditBookPage"
         class="text-h5"
       >Редактировать книгу</span>
       <span
@@ -69,13 +69,13 @@
       </template>
     </v-select>
     <v-card-actions
-      v-if="isEditBook"
+      v-if="isEditBookPage"
       class="mt-4 justify-center"
     >
       <v-btn
         color="#C5CAE9"
-        :disabled="!formAdd || !valid"
-        @click="editBook"
+        :disabled="false"
+        @click="editBookHandler"
       >
         Редактировать
       </v-btn>
@@ -94,7 +94,7 @@
       <v-btn
         color="#C5CAE9"
         :disabled="!formAdd || !valid"
-        @click="createBook"
+        @click="createBookHandler"
       >
         Создать книгу
       </v-btn>
@@ -106,9 +106,13 @@
 export default {
 	name: "FormBook",
 	props: {
-		isEditBook: {
+		isEditBookPage: {
 			type: Boolean,
 			default: false,
+		},
+		editBook: {
+			type: Object,
+			required: false,
 		},
 		value: {
 			type: Object,
@@ -120,6 +124,30 @@ export default {
 		}
 	},
 	data: () => ({
+		isTitleCheckForm: {
+			type: Boolean,
+			default: false,
+		},
+		isYearCheckForm: {
+			type: Boolean,
+			default: false,
+		},
+		isAuthorCheckForm: {
+			type: Boolean,
+			default: false,
+		},
+		isCoverCheckForm: {
+			type: Boolean,
+			default: false,
+		},
+		isPriceCheckForm: {
+			type: Boolean,
+			default: false,
+		},
+		isGenreCheckForm: {
+			type: Boolean,
+			default: false,
+		},
 		formAdd: {
 			title: "",
 			year: "",
@@ -176,14 +204,14 @@ export default {
 	computed: {
 		myModelTitle: {
 			get() {
-				if(this.isEditBook) {
+				if(this.isEditBookPage) {
 					return this.formEdit.title
 				} else {
 					return this.formAdd.title
 				}
 			},
 			set(newValue) {
-				if(this.isEditBook) {
+				if(this.isEditBookPage) {
 					return this.formEdit.title = newValue
 				} else {
 					return this.formAdd.title = newValue
@@ -192,14 +220,15 @@ export default {
 		},
 		myModelYear: {
 			get() {
-				if(this.isEditBook) {
+				if(this.isEditBookPage) {
 					return this.formEdit.year
 				} else {
 					return this.formAdd.year
 				}
 			},
 			set(newValue) {
-				if(this.isEditBook) {
+				this.isYearCheckForm = Boolean(newValue)
+				if(this.isEditBookPage) {
 					return this.formEdit.year = newValue
 				} else {
 					return this.formAdd.year = newValue
@@ -208,14 +237,15 @@ export default {
 		},
 		myModelAuthor: {
 			get() {
-				if(this.isEditBook) {
+				if(this.isEditBookPage) {
 					return this.formEdit.author
 				} else {
 					return this.formAdd.author
 				}
 			},
 			set(newValue) {
-				if(this.isEditBook) {
+				this.isAuthorCheckForm = Boolean(newValue)
+				if(this.isEditBookPage) {
 					return this.formEdit.author = newValue
 				} else {
 					return this.formAdd.author = newValue
@@ -224,14 +254,15 @@ export default {
 		},
 		myModelPrice: {
 			get() {
-				if(this.isEditBook) {
+				if(this.isEditBookPage) {
 					return this.formEdit.price
 				} else {
 					return this.formAdd.price
 				}
 			},
 			set(newValue) {
-				if(this.isEditBook) {
+				this.isPriceCheckForm = Boolean(newValue)
+				if(this.isEditBookPage) {
 					return this.formEdit.price = newValue
 				} else {
 					return this.formAdd.price = newValue
@@ -240,14 +271,15 @@ export default {
 		},
 		myModelGenre: {
 			get() {
-				if(this.isEditBook) {
+				if(this.isEditBookPage) {
 					return this.formEdit.genre
 				} else {
 					return this.formAdd.genre
 				}
 			},
 			set(newValue) {
-				if(this.isEditBook) {
+				this.isGenreCheckForm = Boolean(newValue)
+				if(this.isEditBookPage) {
 					return this.formEdit.genre = newValue
 				} else {
 					return this.formAdd.genre = newValue
@@ -256,14 +288,15 @@ export default {
 		},
 		myModelCover: {
 			get() {
-				if(this.isEditBook) {
+				if(this.isEditBookPage) {
 					return this.formEdit.cover
 				} else {
 					return this.formAdd.cover
 				}
 			},
 			set(newValue) {
-				if(this.isEditBook) {
+				this.isCoverCheckForm = Boolean(newValue)
+				if(this.isEditBookPage) {
 					return this.formEdit.cover = newValue
 				} else {
 					return this.formAdd.cover = newValue
@@ -273,15 +306,14 @@ export default {
 	},
 	watch: {
 		value(newValue) {
-			this.formEdit = newValue
-		}
+			this.formEdit = newValue;
+		},
+		clearTrigger() {
+			this.reset();
+		},
 	},
-	clearTrigger() {
-		this.reset();
-	},
-
 	created() {
-		if(this.isEditBook) {
+		if(this.isEditBookPage) {
 			this.formEdit = this.value
 		}
 	},
@@ -292,11 +324,11 @@ export default {
 		resetValidation () {
 			this.$refs.form.resetValidation()
 		},
-		createBook () {
+		createBookHandler () {
 			this.$emit("createBook", this.formAdd);
 		},
-		editBook () {
-			this.$emit("editBook", this.formEdit)
+		editBookHandler () {
+			this.$emit("editBook", this.formEdit);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 <template>
   <v-container
-    class="d-flex flex-column justify-space-between pb-0"
+    class="d-flex flex-column justify-space-between pb-0 pl-0 pr-0"
     sm="2"
   >
     <Toolbar
@@ -122,8 +122,8 @@ export default {
 			this.$emit("deleteBook", id);
 		},
 		editBooks (book) {
-			this.$emit("editBooks", book)
-		}
+			this.$emit("editBooks", book);
+		},
 	}
 }
 </script>

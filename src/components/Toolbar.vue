@@ -106,6 +106,7 @@
 <script>
 
 export default {
+	name: "Toolbar",
 	props: {
 		books: {
 			type: Array,
@@ -119,8 +120,8 @@ export default {
 		searchName: "",
 		selectedSort: "",
 		items: [
-			{value: "year", text: "Году издания"},
-			{value: "price", text: "Цене"},
+			{value: "year", text: "Год издания (По возрастанию)"},
+			{value: "price", text: "Цена (По возрастанию)"},
 		],
 	}),
 	computed: {

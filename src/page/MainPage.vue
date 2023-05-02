@@ -8,7 +8,7 @@
     </h2>
     <div v-if="!isBookLoading && books.length > 0">
       <BookItem
-        :books="books"
+        :books="booksSortNewYear"
       />
     </div>
     <div>
@@ -33,6 +33,11 @@ export default {
 		isBookLoading: false,
 		isErrorRequestPage: false,
 	}),
+	computed: {
+		booksSortNewYear(){
+			return this.books.slice().sort((a, b) => b["year"] - a["year"])
+		}
+	},
 	mounted() {
 		this.getBooks();
 	},

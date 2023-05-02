@@ -26,17 +26,12 @@
           Создайте книги
         </h2>
         <div v-if="books.length > 0">
-          <v-container
-            class="d-flex flex-column justify-space-between pb-0"
-            sm="2"
-          >
-            <BookItem
-              :books="books"
-              :is-edit-page="true"
-              @deleteBook="deleteBook"
-              @editBooks="editBooks"
-            />
-          </v-container>
+          <BookItem
+            :books="booksSortNewYear"
+            :is-edit-page="true"
+            @deleteBook="deleteBook"
+            @editBooks="editBooks"
+          />
         </div>
         <Popup
           ref="modalNameAdd"
@@ -58,7 +53,8 @@
         >
           <FormBook
             v-model="booksEdit"
-            :is-edit-book="true"
+            :clear-trigger="formClearTrigger"
+            :is-edit-book-page="true"
             @editBook="editPostBooks"
           />
           <AlertRequest
@@ -100,6 +96,11 @@ export default {
 		popupCloseTrigger: false,
 		isBookLoading: false,
 	}),
+	computed: {
+		booksSortNewYear(){
+			return JSON.parse(JSON.stringify(this.books.slice().sort((a, b) => b["year"] - a["year"])));
+		},
+	},
 	mounted() {
 		this.getBooks();
 	},
@@ -129,7 +130,7 @@ export default {
 			this.isBookLoading = true;
 			try {
 				const response = await api.get("/books");
-				this.books = response.data;
+				this.books= response.data;
 				this.isBookLoading = false;
 			} catch (e) {
 				this.isErrorRequestPage = true;
@@ -149,7 +150,8 @@ export default {
 					year: this.booksEdit.year,
 				});
 				this.isSuccessRequest = true;
-				this.handlerRequest()
+				this.handlerRequest();
+				await this.getBooks();
 			} catch (e) {
 				this.isErrorRequest = true;
 				console.log(e)
@@ -170,7 +172,7 @@ export default {
 			}
 		},
 		editBooks(book) {
-			this.booksEdit = book
+			this.booksEdit = book;
 			this.$refs.modalNameEdit.openPopup()
 		},
 		handlerRequest() {
