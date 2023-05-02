@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <Book
-          v-for="book in allBookBasket"
+          v-for="book in allBookBasketSort"
           :key="book._id"
           :book="book"
           :is-button-basket-page="true"
@@ -45,7 +45,10 @@ export default {
 	},
 	computed: {
 		allBookBasket() {
-			return this.$store.getters.getAllBasketBooks
+			return this.$store.getters.getAllBasketBooks;
+		},
+		allBookBasketSort() {
+			return this.allBookBasket.slice().sort((a, b) => b["year"] - a["year"]);
 		}
 	}
 }

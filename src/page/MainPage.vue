@@ -35,7 +35,7 @@ export default {
 	}),
 	computed: {
 		booksSortNewYear(){
-			return this.books.slice().sort((a, b) => b["year"] - a["year"])
+			return this.books.slice().sort((a, b) => b["year"] - a["year"]);
 		}
 	},
 	mounted() {
