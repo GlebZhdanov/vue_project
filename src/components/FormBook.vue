@@ -124,30 +124,6 @@ export default {
 		}
 	},
 	data: () => ({
-		isTitleCheckForm: {
-			type: Boolean,
-			default: false,
-		},
-		isYearCheckForm: {
-			type: Boolean,
-			default: false,
-		},
-		isAuthorCheckForm: {
-			type: Boolean,
-			default: false,
-		},
-		isCoverCheckForm: {
-			type: Boolean,
-			default: false,
-		},
-		isPriceCheckForm: {
-			type: Boolean,
-			default: false,
-		},
-		isGenreCheckForm: {
-			type: Boolean,
-			default: false,
-		},
 		formAdd: {
 			title: "",
 			year: "",
@@ -227,7 +203,6 @@ export default {
 				}
 			},
 			set(newValue) {
-				this.isYearCheckForm = Boolean(newValue)
 				if(this.isEditBookPage) {
 					return this.formEdit.year = newValue
 				} else {
@@ -244,7 +219,6 @@ export default {
 				}
 			},
 			set(newValue) {
-				this.isAuthorCheckForm = Boolean(newValue)
 				if(this.isEditBookPage) {
 					return this.formEdit.author = newValue
 				} else {
@@ -261,7 +235,6 @@ export default {
 				}
 			},
 			set(newValue) {
-				this.isPriceCheckForm = Boolean(newValue)
 				if(this.isEditBookPage) {
 					return this.formEdit.price = newValue
 				} else {
@@ -278,7 +251,6 @@ export default {
 				}
 			},
 			set(newValue) {
-				this.isGenreCheckForm = Boolean(newValue)
 				if(this.isEditBookPage) {
 					return this.formEdit.genre = newValue
 				} else {
@@ -295,7 +267,6 @@ export default {
 				}
 			},
 			set(newValue) {
-				this.isCoverCheckForm = Boolean(newValue)
 				if(this.isEditBookPage) {
 					return this.formEdit.cover = newValue
 				} else {
